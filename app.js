@@ -111,6 +111,8 @@ const combate = ()=>{
     
 }
 
+//Tarea a realizar tabla de combates
+
 
 window.addEventListener('load', obtenerPokeRival);
 
