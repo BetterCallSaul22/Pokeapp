@@ -106,10 +106,13 @@ const obtenerPokeRival = () =>{
 //poke2VidaRestante = poke2Vida - DañoRecibido;
 //Se turnarán los pokemon hasta que haya un ganador
 //Mostrar el ganador
+// Comentario de prueba
 const combate = ()=>{
-    console.log("Están peleando lmao")
     
 }
+
+
+
 
 
 window.addEventListener('load', obtenerPokeRival);
