@@ -106,15 +106,111 @@ const obtenerPokeRival = () =>{
 //poke2VidaRestante = poke2Vida - DañoRecibido;
 //Se turnarán los pokemon hasta que haya un ganador
 //Mostrar el ganador
-const combate = ()=>{
-    console.log("Están peleando lmao")
-    
-}
+const combate = () => {
+    const calcularDaño = (ataque, defensa) => {
+        let daño = ataque - defensa;
+        return daño <= 0 ? 1 : daño; // Daño mínimo de 1
+    };
 
+    const aplicarDaño = (defensor, vida, daño) => {
+        defensor.innerHTML = Math.max(0, vida - daño); // Evitar vida negativa
+    };
+
+    const obtenerTipoMultiplicador = (tipoAtacante, tipoDefensor) => {
+        // Aquí podrías integrar la lógica completa de la tabla de tipos (de PokeAPI o manual).
+        // Por simplicidad, asumiremos un multiplicador de 1 por defecto.
+        return 1; 
+    };
+
+    // Variables para stats iniciales
+    let vidaPropioActual = parseInt(vidaPropio.innerHTML);
+    let vidaRivalActual = parseInt(vidaRival.innerHTML);
+
+    const velocidadPropioValor = parseInt(velocidadPropio.innerHTML);
+    const velocidadRivalValor = parseInt(velocidadRival.innerHTML);
+
+    const turnoPrimero = velocidadPropioValor >= velocidadRivalValor ? "propio" : "rival";
+
+    const ejecutarTurno = (atacante, defensor, tipoAtaque) => {
+        const ataque = tipoAtaque === "fisico" 
+            ? parseInt(atacante.ataqueFis.innerHTML) 
+            : parseInt(atacante.ataqueEsp.innerHTML);
+        const defensa = tipoAtaque === "fisico" 
+            ? parseInt(defensor.defensaFis.innerHTML) 
+            : parseInt(defensor.defensaEsp.innerHTML);
+
+        const dañoBase = calcularDaño(ataque, defensa);
+
+        // Multiplicador por tipo
+        const tipoMultiplicador = obtenerTipoMultiplicador(
+            atacante.tipo1.innerHTML, 
+            defensor.tipo1.innerHTML
+        );
+
+        const dañoFinal = Math.round(dañoBase * tipoMultiplicador);
+        aplicarDaño(defensor.vida, parseInt(defensor.vida.innerHTML), dañoFinal);
+    };
+
+    while (vidaPropioActual > 0 && vidaRivalActual > 0) {
+        if (turnoPrimero === "propio") {
+            // Turno del Pokémon propio
+            ejecutarTurno(
+                {
+                    ataqueFis: atkFisPropio,
+                    ataqueEsp: atkEspPropio,
+                    tipo1: tipo1Propio,
+                    tipo2: tipo2Propio,
+                },
+                {
+                    defensaFis: defensaFisRival,
+                    defensaEsp: defensaEspRival,
+                    vida: vidaRival,
+                    tipo1: tipo1Rival,
+                    tipo2: tipo2Rival,
+                },
+                btnAtkFis.clicked ? "fisico" : "especial"
+            );
+
+            // Revisar si el rival perdió
+            if (parseInt(vidaRival.innerHTML) <= 0) {
+                alert("¡Ganaste!");
+                return;
+            }
+
+            // Turno del rival
+            ejecutarTurno(
+                {
+                    ataqueFis: atkFisRival,
+                    ataqueEsp: atkEspRival,
+                    tipo1: tipo1Rival,
+                    tipo2: tipo2Rival,
+                },
+                {
+                    defensaFis: defensaFisPropio,
+                    defensaEsp: defensaEspPropio,
+                    vida: vidaPropio,
+                    tipo1: tipo1Propio,
+                    tipo2: tipo2Propio,
+                },
+                "fisico"
+            );
+
+            // Revisar si perdiste
+            if (parseInt(vidaPropio.innerHTML) <= 0) {
+                alert("¡Perdiste!");
+                return;
+            }
+        }
+    }
+};
+
+  
 
 window.addEventListener('load', obtenerPokeRival);
 
 btnElegir.addEventListener('click', obtenerPokePropio);
 
-btnAtkFis.addEventListener('click', combate);
+//btnAtkFis.addEventListener('click', combate);
 
+btnAtkFis.addEventListener("click", () => combate("fisico"));
+btnAtkEsp.addEventListener("click", () => combate("especial"));
