@@ -7,6 +7,7 @@ body{
 #UI{
     height: 10%;
     width: 100%;
+    display: flex;
 }
 #arena{
     display: flex;
@@ -14,23 +15,25 @@ body{
     background-image: url('./fondo.png');
     background-repeat: no-repeat;
     background-size: contain;
+    overflow: hidden;
 }
 #pokePropio{
-    position: fixed;
-    top: 241px;
-    left: 138px;
+    position: relative;
+    top: 120px;
+    left: 0px;
+    height: 30%;
 }
 #pokeRival{
-    position: fixed;
-    top: 146px;
-    left: 371px;
+    position: relative;
+    top: 80px;
+    left: 350px;
+    height: 30%;
 }
 #poke-rival{
     width: 100%;
-    height: 20%;
+    height: auto;
 }
 #poke-propio{
     width: 100%;
-    height: 20%;
+    height: auto;
 }
-
