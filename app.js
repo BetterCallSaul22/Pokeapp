@@ -106,6 +106,7 @@ const obtenerPokeRival = () =>{
 //poke2VidaRestante = poke2Vida - DañoRecibido;
 //Se turnarán los pokemon hasta que haya un ganador
 //Mostrar el ganador
+<<<<<<< HEAD
 // Comentario de prueba
 const combate = ()=>{
     console.log("Están peleando lmao")
@@ -221,6 +222,14 @@ const combate = () => {
         return daño <= 0 ? 1 : daño; // Daño mínimo de 1
     };
 
+=======
+const combate = () => {
+    const calcularDaño = (ataque, defensa) => {
+        let daño = ataque - defensa;
+        return daño <= 0 ? 1 : daño; // Daño mínimo de 1
+    };
+
+>>>>>>> origin/Paul
     const aplicarDaño = (defensor, vida, daño) => {
         defensor.innerHTML = Math.max(0, vida - daño); // Evitar vida negativa
     };
@@ -235,6 +244,35 @@ const combate = () => {
     let vidaPropioActual = parseInt(vidaPropio.innerHTML);
     let vidaRivalActual = parseInt(vidaRival.innerHTML);
 
+<<<<<<< HEAD
+=======
+    const velocidadPropioValor = parseInt(velocidadPropio.innerHTML);
+    const velocidadRivalValor = parseInt(velocidadRival.innerHTML);
+
+    const turnoPrimero = velocidadPropioValor >= velocidadRivalValor ? "propio" : "rival";
+
+    const ejecutarTurno = (atacante, defensor, tipoAtaque) => {
+        const ataque = tipoAtaque === "fisico" 
+            ? parseInt(atacante.ataqueFis.innerHTML) 
+            : parseInt(atacante.ataqueEsp.innerHTML);
+        const defensa = tipoAtaque === "fisico" 
+            ? parseInt(defensor.defensaFis.innerHTML) 
+            : parseInt(defensor.defensaEsp.innerHTML);
+
+        const dañoBase = calcularDaño(ataque, defensa);
+
+        // Multiplicador por tipo
+        const tipoMultiplicador = obtenerTipoMultiplicador(
+            atacante.tipo1.innerHTML, 
+            defensor.tipo1.innerHTML
+        );
+
+        const dañoFinal = Math.round(dañoBase * tipoMultiplicador);
+        aplicarDaño(defensor.vida, parseInt(defensor.vida.innerHTML), dañoFinal);
+    };
+
+    while (vidaPropioActual > 0 && vidaRivalActual > 0) {
+>>>>>>> origin/Paul
         if (turnoPrimero === "propio") {
             // Turno del Pokémon propio
             ejecutarTurno(
@@ -284,6 +322,10 @@ const combate = () => {
                 return;
             }
         }
+<<<<<<< HEAD
+=======
+    }
+>>>>>>> origin/Paul
 };
 
   
@@ -293,7 +335,12 @@ window.addEventListener('load', obtenerPokeRival);
 btnElegir.addEventListener('click', obtenerPokePropio);
 
 //btnAtkFis.addEventListener('click', combate);
+<<<<<<< HEAD
 
 btnAtkFis.addEventListener("click", () => combate("fisico"));
 btnAtkEsp.addEventListener("click", () => combate("especial"));
+=======
+>>>>>>> origin/Paul
 
+btnAtkFis.addEventListener("click", () => combate("fisico"));
+btnAtkEsp.addEventListener("click", () => combate("especial"));
