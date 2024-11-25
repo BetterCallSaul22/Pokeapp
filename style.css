@@ -1,39 +1,86 @@
-body{
+/* Estilos del body*/
+body {
     height: 100vh;
     width: 100vw;
     display: flex;
     flex-direction: column;
+    align-items: center; 
+    font-family: 'Courier New','Segoe UI', sans-serif;
+    background-color: #E5F7FF;
 }
-#UI{
-    height: 10%;
-    width: 100%;
-    display: flex;
+
+h1{
+    text-align: center;
 }
-#arena{
+
+/* Estilos los divs que contiene los datos del combate */
+.datosCombate {
     display: flex;
-    height: 50%;
+    justify-content: center;
+    width: 50%;
+    gap: 35px; 
+}
+
+#poke-propio, #poke-rival {
+    width: 45%;
+}
+
+/* Se pone la arrena en un rectangulo y dentro se colocan los pokemones */
+#arena {
+    display: flex;
+    position: relative;
+    width: 60%; 
+    aspect-ratio: 1 / 1; 
+    margin: 0;
     background-image: url('./fondo.png');
     background-repeat: no-repeat;
-    background-size: contain;
-    overflow: hidden;
+    background-size: cover; 
+    background-position: center; 
+    border: 2px solid black; 
+    min-height: 320px;
 }
-#pokePropio{
-    position: relative;
-    top: 120px;
-    left: 0px;
-    height: 30%;
+
+#pokeRival, #pokePropio {
+    position: absolute;
+    height: 70%; 
 }
-#pokeRival{
-    position: relative;
-    top: 80px;
-    left: 350px;
-    height: 30%;
+
+#pokeRival {
+    top: 0%;
+    left: 58%;
 }
-#poke-rival{
-    width: 100%;
-    height: auto;
+
+#pokePropio {
+    bottom: -10%;
+    right: 55%;
 }
-#poke-propio{
-    width: 100%;
-    height: auto;
+
+/* Input y botones para seleccionar el combate */
+
+#UI {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#input {
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:active {
+    background-color: #3e8e41; 
 }
