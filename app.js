@@ -150,7 +150,7 @@ const tablaEfectividad = {
     },
     fighting: {
         normal: 2, ice: 2, rock: 2, dark: 2, steel: 2,
-        fairy: 0.5, ghost: 0, water: 1, dragon: 1, electric: 1, fire: 1, fighting: 1, grass: 1, ground: 1
+        water: 1, dragon: 1, electric: 1, fire: 1, fighting: 1, grass: 1, ground: 1
     },
     normal: {
         water: 1, bug: 1, dragon: 1, electric: 1, fire: 1, ice: 1,
@@ -195,7 +195,7 @@ function obtenerValor(tablaEfectividad, tipoAtacante, tipo){
             return subdiccionario[tipo];
         }
     }
-    return null; 
+    return 1; 
 }
 
 //Funcionalidad de la efectividad (Uso de la Tabla)
@@ -203,94 +203,99 @@ function obtenerValor(tablaEfectividad, tipoAtacante, tipo){
 //Pasar las variables
 //Tipo1Propio
 //tipo1Rival
-const efectividad = (tipo1Atacante, tipo1Rival) => {
-    tipo1Atacante = tipo1Atacante.textContent; 
-    tipo1Rival = tipo1Rival.textContent
-    //Esta variable devuelve el multiplicador de efectividad
-    let multiplicador = obtenerValor(tablaEfectividad,tipo1Atacante, tipo1Rival);
-    return multiplicador;
+const efectividad = (atacante) => {
+    if(atacante == "propio"){
+        let multiplicador = obtenerValor(tablaEfectividad,tipo1Propio.innerHTML, tipo1Rival.innerHTML);
+        console.log("El multiplicador del atacante es: " + multiplicador);
+        if(multiplicador == 1){
+            multiplicador = obtenerValor(tablaEfectividad,tipo2Propio.innerHTML, tipo2Rival.innerHTML);
+        }
+        console.log("El multiplicador del atacante es: " + multiplicador);
+        return multiplicador;
+    }else if(atacante == "rival"){
+        let multiplicador = obtenerValor(tablaEfectividad,tipo1Rival.innerHTML, tipo1Propio.innerHTML);
+        console.log("El multiplicador del rival es: " + multiplicador);
+        if(multiplicador == 1){
+            console.log("El multiplicador del rival es: " + multiplicador);
+            multiplicador = obtenerValor(tablaEfectividad,tipo2Rival.innerHTML, tipo2Propio.innerHTML);
+        }
+        return multiplicador;
+    }
+    
 };
 
-
-
-const combate = () => {
-    const calcularDaño = (ataque, defensa) => {
-        let daño = ataque - defensa;
+function combate(tipoAtaque){
+    const calcularDaño = (ataque, defensa, atacante) => {
+        let daño = ataque*efectividad(atacante) - defensa;
         return daño <= 0 ? 1 : daño; // Daño mínimo de 1
     };
 
-    const aplicarDaño = (defensor, vida, daño) => {
-        defensor.innerHTML = Math.max(0, vida - daño); // Evitar vida negativa
-    };
-
-    const obtenerTipoMultiplicador = (tipoAtacante, tipoDefensor) => {
-        // Aquí podrías integrar la lógica completa de la tabla de tipos (de PokeAPI o manual).
-        // Por simplicidad, asumiremos un multiplicador de 1 por defecto.
-        return 1; 
+    const aplicarDaño = (vida, daño) => {
+        return Math.max(0, vida - daño); // Evitar vida negativa
     };
 
     const velocidadPropioValor = parseInt(velocidadPropio.innerHTML);
+    console.log(velocidadPropioValor);
     const velocidadRivalValor = parseInt(velocidadRival.innerHTML);
+    console.log(velocidadRivalValor);
+
 
     const turnoPrimero = velocidadPropioValor >= velocidadRivalValor ? "propio" : "rival";
+    const turnoSegundo = velocidadPropioValor < velocidadRivalValor ? "propio" : "rival";
+    atacar(turnoPrimero, tipoAtaque);
+    atacar(turnoSegundo, tipoAtaque);
 
 
 
 
     // Variables para stats iniciales
-    let vidaPropioActual = parseInt(vidaPropio.innerHTML);
-    let vidaRivalActual = parseInt(vidaRival.innerHTML);
 
-        if (turnoPrimero === "propio") {
-            // Turno del Pokémon propio
-            ejecutarTurno(
-                {
-                    ataqueFis: atkFisPropio,
-                    ataqueEsp: atkEspPropio,
-                    tipo1: tipo1Propio,
-                    tipo2: tipo2Propio,
-                },
-                {
-                    defensaFis: defensaFisRival,
-                    defensaEsp: defensaEspRival,
-                    vida: vidaRival,
-                    tipo1: tipo1Rival,
-                    tipo2: tipo2Rival,
-                },
-                btnAtkFis.clicked ? "fisico" : "especial"
-            );
-
-            // Revisar si el rival perdió
-            if (parseInt(vidaRival.innerHTML) <= 0) {
-                alert("¡Ganaste!");
-                return;
+    function atacar(atacante, tipo){
+        
+        if(atacante == "propio" && tipo == "fisico"){
+            let danoRecibido = calcularDaño(parseInt(atkFisPropio.innerHTML), parseInt(defensaFisRival.innerHTML), atacante);
+            let vidaRivalFinal = aplicarDaño(parseInt(vidaRival.innerHTML), danoRecibido);
+            vidaRival.innerHTML = vidaRivalFinal;
+            if(vidaRival.innerHTML == 0){
+                alert(nombrePropio.innerHTML + " ha ganado la batalla!");
+            }
+        }else if(atacante == "propio" && tipo == "especial"){
+            let danoRecibido = calcularDaño(parseInt(atkEspPropio.innerHTML), parseInt(defensaEspRival.innerHTML), atacante);
+            aplicarDaño(parseInt(vidaRival.innerHTML), danoRecibido);
+            let vidaRivalFinal = aplicarDaño(parseInt(vidaRival.innerHTML), danoRecibido);;
+            vidaRival.innerHTML = vidaRivalFinal;
+            if(vidaRival.innerHTML == 0){
+                alert(nombrePropio.innerHTML + " ha ganado la batalla!");
+            }
+        }else if(atacante == "rival"){
+            let random = getNumRandomBatalla(2);
+            if(random == 0){
+                let danoRecibido = calcularDaño(parseInt(atkFisRival.innerHTML), parseInt(defensaFisPropio.innerHTML), atacante);
+                let vidaPropioFinal = aplicarDaño(parseInt(vidaPropio.innerHTML), danoRecibido);
+                vidaPropio.innerHTML = vidaPropioFinal;
+                if(vidaPropio.innerHTML == 0){
+                    alert(nombreRival.innerHTML + " ha ganado la batalla!");
+                }
+            } else if(random == 1){
+                let danoRecibido = calcularDaño(parseInt(atkEspRival.innerHTML), parseInt(defensaEspPropio.innerHTML), atacante);
+                let vidaPropioFinal = aplicarDaño(parseInt(vidaPropio.innerHTML), danoRecibido);
+                vidaPropio.innerHTML = vidaPropioFinal;
+                if(vidaPropio.innerHTML == 0){
+                    alert(nombreRival.innerHTML + " ha ganado la batalla!");
+                }
             }
 
-            // Turno del rival
-            ejecutarTurno(
-                {
-                    ataqueFis: atkFisRival,
-                    ataqueEsp: atkEspRival,
-                    tipo1: tipo1Rival,
-                    tipo2: tipo2Rival,
-                },
-                {
-                    defensaFis: defensaFisPropio,
-                    defensaEsp: defensaEspPropio,
-                    vida: vidaPropio,
-                    tipo1: tipo1Propio,
-                    tipo2: tipo2Propio,
-                },
-                "fisico"
-            );
-
-            // Revisar si perdiste
-            if (parseInt(vidaPropio.innerHTML) <= 0) {
-                alert("¡Perdiste!");
-                return;
-            }
         }
+    
+    }
+
+    function getNumRandomBatalla(max) {
+    return Math.floor(Math.random() * max);
+    }
+
 };
+
+
 
   
 
@@ -298,5 +303,7 @@ window.addEventListener('load', obtenerPokeRival);
 
 btnElegir.addEventListener('click', obtenerPokePropio);
 
-btnAtkFis.addEventListener('click', combate);
+btnAtkFis.addEventListener('click', () => combate("fisico"));
+
+btnAtkEsp.addEventListener('click', () => combate("especial"));
 
