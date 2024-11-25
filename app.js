@@ -300,7 +300,6 @@ function combate(tipoAtaque){
   
 
 window.addEventListener('load', obtenerPokeRival);
-
 btnElegir.addEventListener('click', obtenerPokePropio);
 
 btnAtkFis.addEventListener('click', () => combate("fisico"));
